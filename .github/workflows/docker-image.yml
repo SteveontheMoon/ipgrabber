@@ -32,7 +32,7 @@ jobs:
         context: .
         file: ./Dockerfile
         tags: |
-          ghcr.io/steveonthemoon/ipgrabber-testtest:${{ env.LATEST_COMMIT_SHA }}
-          ghcr.io/steveonthemoon/ipgrabber-testtest:latest
+          ghcr.io/steveonthemoon/ipgrabber:${{ env.LATEST_COMMIT_SHA }}
+          ghcr.io/steveonthemoon/ipgrabber:latest
         push: true
 
