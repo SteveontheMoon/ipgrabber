@@ -1,1 +1,1 @@
-Save to a file the ip of connected client.
+Save the ip of connected client.
