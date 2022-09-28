@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  ipgrabber:
+    container_name: ipgrabber
+    build:
+      context: .
+      target: dev
+      labels:
+        - ipgrabber
+    volumes:
+      - ./src:/app/src

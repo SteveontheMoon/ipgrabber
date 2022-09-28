@@ -1,25 +1,19 @@
-FROM node:latest
-
-# Create app directory
+FROM node:latest AS base
 WORKDIR /app
+ENV DOCKER=true
+COPY package.json ./
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+FROM base AS dev
+ENV NODE_ENV=development
+RUN npm install --verbose
+COPY . /app
+HEALTHCHECK --interval=1m --start-period=30s --retries=2 CMD curl --fail --silent http://localhost:3000/healthcheck || exit 1
+CMD [ "npx", "nodemon", "/app/src/app.js" ]
 
-# If you are building your code for production
-#RUN npm ci --only=production
-RUN npm install
-
-# Produtcion
+FROM base AS prod
 ENV NODE_ENV=production
-
-# Bundle app source
-COPY . .
-
-# Port
+RUN npm install --verbose
+COPY . /app
+HEALTHCHECK --interval=1m --start-period=30s --retries=2 CMD curl --fail --silent http://localhost:3000/healthcheck || exit 1
 EXPOSE 3000
-
-# Start
-CMD [ "npm", "start" ]
+CMD [ "node", "/app/src/app.js" ]

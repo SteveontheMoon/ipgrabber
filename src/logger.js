@@ -6,7 +6,8 @@ const LEVEL = Symbol.for("level");
 // With them, You can create log files,
 // see or hide levels based on the running ENV.
 const levels = {
-  http: 0,
+  info: 0,
+  http: 1,
 };
 
 // This method set the current severity based on the current NODE_ENV:
@@ -20,6 +21,7 @@ const level = () => {
 // Colors make the log message more visible,
 // adding the ability to focus or ignore messages.
 const colors = {
+  info: "blue",
   http: "magenta",
 };
 
@@ -29,7 +31,7 @@ winston.addColors(colors);
 // Choose the aspect of your log customizing the log format.
 const format = winston.format.combine(
   // Add the message timestamp with the preferred format
-  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   // Tell Winston that the logs must be colored
   winston.format.colorize({ level: true }),
   // Define the format of the message showing the timestamp, the level and the message
@@ -45,7 +47,7 @@ const transports = [
 
   // Allow to print all the error level messages inside error.log file
   new winston.transports.File({
-    filename: "../logs/access.log",
+    filename: "logs/access.log",
     level: "http",
     maxsize: 5242880, //5MB
     maxFiles: 5,
