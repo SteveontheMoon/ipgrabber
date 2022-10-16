@@ -11,7 +11,7 @@ const morganMiddleware = morgan(
   // Define message format string (this is the default one).
   ":remote-addr - :method - Path::url - :status - :response-time ms - :user-agent",
   // Options: in this case, I overwrote the stream and the skip logic.
-  { stream }
+  { skip: (req, res) => { return req.originalUrl == "/healthcheck"}, stream }
 );
 
 module.exports = morganMiddleware;
