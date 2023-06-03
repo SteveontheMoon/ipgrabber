@@ -13,15 +13,15 @@ router.get(["/ip", "/ips"], (req, res) => {
     res.json(req.ip);
 });
 
-router.get("/head", (req, res) => {
-    res.json(req.rawHeaders);
+router.get(["/head", "/header", "/headers", "/h"], (req, res) => {
+    res.json(req.headers);
 });
 
 router.get("/method", (req, res) => {
     res.json(req.method);
 });
 
-router.get("/protocol", (req, res) => {
+router.get(["/protocol", "/protocol"], (req, res) => {
     res.json(req.protocol);
 });
 

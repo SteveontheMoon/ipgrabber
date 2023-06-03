@@ -2,8 +2,8 @@ const express = require("express");
 
 const fileLogger = require("./morgan");
 const logger = require("./logger");
-const api_router = require('./api_route')
-const post_router = require('./post_route')
+const api_router = require('./route/json')
+const post_router = require('./route/post')
 
 const app = express();
 
@@ -36,8 +36,10 @@ if (process.env.NODE_ENV == "production") {
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.set("x-powered-by", false);
+
 app.use("/json", api_router);
 app.use("/p", post_router);
+
 app.use(express.json());
 app.use(fileLogger);
 app.use((err, req, res, next) => {
@@ -47,12 +49,25 @@ app.use((err, req, res, next) => {
 })
 
 app.get("/", (req, res) => {
-  res.send(req.ip + "\n")
+  let ip = req.ip;
+  let headers = req.headers;
+  let method = req.method;
+  let protocol = req.protocol;
+  
+  let data = `ip: ${ip}\nmethod: ${method}\nprotocol: ${protocol}\n`;
+  for(let [header, value] of Object.entries(headers)) {
+    data += `${header}: ${value}\n`
+  }
+  res.setHeader("Content-Type", "text/plain").send(data);
 });
 
 app.get("/healthcheck", (req, res) => {
   res.status(200).json({ status: "200" });
 });
+
+app.use((req, res, next) => {
+  res.status(404).send("404\n");
+})
 
 app.listen(PORT, () => {
   logger.info("Server started on http://" + address + ":" + PORT + "\n");
