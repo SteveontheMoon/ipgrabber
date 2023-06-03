@@ -3,6 +3,7 @@ version: "3.7"
 services:
   ipgrabber:
     container_name: ipgrabber
+    env_file: .env
     build:
       context: .
       target: dev

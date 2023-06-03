@@ -1,14 +1,18 @@
 const express = require("express");
+const TelegramBot = require("node-telegram-bot-api");
 
 const fileLogger = require("./morgan");
 const logger = require("./logger");
 const api_router = require('./route/json')
 const post_router = require('./route/post')
 
-const app = express();
-
 const DOCKER = process.env.DOCKER || false;
 const PORT = process.env.PORT || 3000;
+const TG_TOKEN = process.env.TG_TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
+
+const app = express();
+const bot = new TelegramBot(TG_TOKEN);
 
 const datafolder = (() => {
   return DOCKER ? { root: "./data" } : { root: "/app/data" };
@@ -58,6 +62,7 @@ app.get("/", (req, res) => {
   for(let [header, value] of Object.entries(headers)) {
     data += `${header}: ${value}\n`
   }
+  bot.sendMessage(CHAT_ID, data);
   res.setHeader("Content-Type", "text/plain").send(data);
 });
 
